@@ -1,10 +1,10 @@
 from rest_framework import serializers
 
-from .models import Receipt, Item
+from .models import Receipt, SaleItem
 
 class ItemSerializer(serializers.ModelSerializer):   
     class Meta:
-        model = Item
+        model = SaleItem
         read_only_fields = (
             "receipt",
         )
@@ -26,7 +26,7 @@ class ReceiptSerializer(serializers.ModelSerializer):
         model = Receipt
         read_only_fields = (
             "team",
-            "invoice_number",
+            "receipt_number",
             "created_at",
             "created_by",
             "modified_at",
@@ -34,7 +34,7 @@ class ReceiptSerializer(serializers.ModelSerializer):
         ),
         fields = (
             "id",
-            "invoice_number",
+            "receipt_number",
             "customer",
             "customer_name",
             "customer_email",
@@ -47,7 +47,7 @@ class ReceiptSerializer(serializers.ModelSerializer):
             "customer_contact_person",
             "customer_contact_reference",
             "sender_reference",
-            "invoice_type",
+            "receipt_type",
             "due_days",
             "is_sent",
             "is_paid",
@@ -67,6 +67,6 @@ class ReceiptSerializer(serializers.ModelSerializer):
         receipt = Receipt.objects.create(**validated_data)
 
         for item in items_data:
-            Item.objects.create(receipt=receipt, **item)
+            SaleItem.objects.create(receipt=receipt, **item)
         
         return receipt

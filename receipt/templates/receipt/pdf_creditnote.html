@@ -32,7 +32,7 @@
                     vertical-align: top;
                 }
 
-                    .top-left .client {
+                    .top-left .customer {
                         margin-top: 40px;
                         margin-left: 40px;
                     }
@@ -159,7 +159,7 @@
     <body>
         <div class="top">
             <div class="top-left">
-                <div class="invoicely">
+                <div class="receiptly">
                     <h3>{{ team.name }}</h3>
                     <p>{{ team.address }}</p>
                     {% if team.zipcode or team.place %}
@@ -167,21 +167,21 @@
                     {% endif %}
                 </div>
 
-                <div class="client">
-                    <p>{{ invoice.client_name }}</p>
+                <div class="customer">
+                    <p>{{ receipt.customer_name }}</p>
 
-                    {% if invoice.client_address %}
-                        <p>{{ invoice.client_address }}</p>
+                    {% if receipt.customer_address %}
+                        <p>{{ receipt.customer_address }}</p>
                     {% endif %}
 
-                    {% if invoice.client_zipcode or invoice.client_place %}
-                        <p>{{ invoice.client_zipcode }} {{ invoice.client_place }}</p>
+                    {% if receipt.customer_zipcode or receipt.customer_place %}
+                        <p>{{ receipt.customer_zipcode }} {{ receipt.customer_place }}</p>
                     {% endif %}
                 </div>
             </div>
 
             <div class="top-right">
-                <h2>Credit note {{ invoice.invoice_number }}</h2>
+                <h2>Credit note {{ receipt.receipt_number }}</h2>
 
                 <div class="split">
                     <div class="split-left">Email</div>
@@ -189,26 +189,26 @@
                 </div>
 
                 <div class="split">
-                    <div class="split-left">Invoice date</div>
-                    <div class="split-right">{{ invoice.created_at|date:'d.m.Y' }}</div>
+                    <div class="split-left">Receipt date</div>
+                    <div class="split-right">{{ receipt.created_at|date:'d.m.Y' }}</div>
                 </div>
 
                 <div class="split">
                     <div class="split-left">Credit note for</div>
-                    <div class="split-right">{{ invoice.is_invoice_for.invoice_number }}</div>
+                    <div class="split-right">{{ receipt.is_receipt_for.receipt_number }}</div>
                 </div>
 
-                {% if invoice.sender_reference %}
+                {% if receipt.sender_reference %}
                     <div class="split">
                         <div class="split-left">Our reference</div>
-                        <div class="split-right">{{ invoice.sender_reference }}</div>
+                        <div class="split-right">{{ receipt.sender_reference }}</div>
                     </div>
                 {% endif %}
 
-                {% if invoice.client_contact_reference %}
+                {% if receipt.customer_contact_reference %}
                     <div class="split">
                         <div class="split-left">Their reference</div>
-                        <div class="split-right">{{ invoice.client_contact_reference }}</div>
+                        <div class="split-right">{{ receipt.customer_contact_reference }}</div>
                     </div>
                 {% endif %}
             </div>
@@ -226,7 +226,7 @@
 
                 <div class="items-row-cell header sum">Sum</div>
 
-                {% for item in invoice.items.all %}
+                {% for item in receipt.items.all %}
                     <div class="items-row">
                         <div class="items-row-cell title">{{ item.title }}</div>
 
@@ -248,23 +248,23 @@
             </div>
 
             <div class="summary-left">
-                <p><strong>Invoice number: </strong>{{ invoice.invoice_number }}</p>
+                <p><strong>Receipt number: </strong>{{ receipt.receipt_number }}</p>
             </div>
 
             <div class="summary-right">
                 <div class="split">
                     <div class="split-left">Net amount</div>
-                    <div class="split-right">-{{ invoice.net_amount }}</div>
+                    <div class="split-right">-{{ receipt.net_amount }}</div>
                 </div>
 
                 <div class="split">
                     <div class="split-left">Vat amount</div>
-                    <div class="split-right">-{{ invoice.vat_amount }}</div>
+                    <div class="split-right">-{{ receipt.vat_amount }}</div>
                 </div>
 
                 <div class="split">
                     <div class="split-left"><strong>Credit</strong></div>
-                    <div class="split-right"><strong>-{{ invoice.gross_amount }}</strong></div>
+                    <div class="split-right"><strong>-{{ receipt.gross_amount }}</strong></div>
                 </div>
             </div>
         </div>

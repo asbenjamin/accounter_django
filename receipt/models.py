@@ -36,10 +36,10 @@ class Receipt(models.Model):
     is_sent = models.BooleanField(default=False)
     is_paid = models.BooleanField(default=False)
     bankaccount = models.CharField(max_length=266, blank=True, null=True)
-    gross_amount = models.DecimalField(max_digits=6, decimal_places=2)
-    vat_amount = models.DecimalField(max_digits=6, decimal_places=2)
-    net_amount = models.DecimalField(max_digits=6, decimal_places=2)
-    discount_amount = models.DecimalField(max_digits=6, decimal_places=2)
+    gross_amount = models.DecimalField(max_digits=12, decimal_places=2)
+    vat_amount = models.DecimalField(max_digits=12, decimal_places=2)
+    net_amount = models.DecimalField(max_digits=12, decimal_places=2)
+    discount_amount = models.DecimalField(max_digits=12, decimal_places=2)
     team = models.ForeignKey(Team, related_name='receipts', on_delete=models.CASCADE)
     customer = models.ForeignKey(Customer, related_name='receipts', on_delete=models.CASCADE)
     created_by = models.ForeignKey(User, related_name='created_receipts', on_delete=models.CASCADE)
@@ -56,12 +56,12 @@ class Receipt(models.Model):
     def get_due_date_formatted(self):
         return self.get_due_date().strftime("%d.%m.%Y")
 
-class Item(models.Model):
+class SaleItem(models.Model):
     receipt = models.ForeignKey(Receipt, related_name='items', on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     quantity = models.IntegerField(default=1)
-    unit_price = models.DecimalField(max_digits=6, decimal_places=2)
-    net_amount = models.DecimalField(max_digits=6, decimal_places=2)
+    unit_price = models.DecimalField(max_digits=12, decimal_places=2)
+    net_amount = models.DecimalField(max_digits=12, decimal_places=2)
     vat_rate = models.IntegerField(default=0)
     discount = models.IntegerField(default=0)
 
@@ -71,4 +71,4 @@ class Item(models.Model):
 
     def save(self, *args, **kwargs):
         self.net_amount = self.quantity * self.unit_price
-        return super(Item, self).save()
+        return super(SaleItem, self).save()

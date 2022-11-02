@@ -1,26 +1,26 @@
 from rest_framework import serializers
 
 from .models import Customer
-from invoice.models import Invoice
+from receipt.models import Receipt
 
-class CustomerInvoiceSerializer(serializers.ModelSerializer):
+class CustomerReceiptSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Invoice
+        model = Receipt
         fields = (
             "id",
-            "invoice_number",
+            "receipt_number",
             "is_sent",
             "is_paid",
             "gross_amount",
             "vat_amount",
             "net_amount",
             "get_due_date_formatted",
-            "invoice_type",
+            "receipt_type",
             "is_credited",
         )
 
 class CustomerSerializer(serializers.ModelSerializer):   
-    invoices = CustomerInvoiceSerializer(many=True, required=False)
+    receipts = CustomerReceiptSerializer(many=True, required=False)
 
     class Meta:
         model = Customer
@@ -40,5 +40,5 @@ class CustomerSerializer(serializers.ModelSerializer):
             "country",
             "contact_person",
             "contact_reference",
-            "invoices",
+            "receipts",
         )

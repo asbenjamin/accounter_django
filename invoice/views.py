@@ -12,7 +12,7 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 from rest_framework.response import Response
 
 from .serializers import InvoiceSerializer, ItemSerializer
-from .models import Invoice, Item
+from .models import Invoice, ExpenseItem
 
 from team.models import Team
 
@@ -46,10 +46,10 @@ def generate_pdf(request, invoice_id):
     invoice = get_object_or_404(Invoice, pk=invoice_id, created_by=request.user)
     team = Team.objects.filter(created_by=request.user).first()
 
-    template_name = 'pdf.html'
+    template_name = 'invoice/pdf.html'
 
     if invoice.is_credit_for:
-        template_name = 'pdf_creditnote.html'
+        template_name = 'invoice/pdf_creditnote.html'
 
     template = get_template(template_name)
     html = template.render({'invoice': invoice, 'team': team})
@@ -76,7 +76,7 @@ def send_reminder(request, invoice_id):
     msg = EmailMultiAlternatives(subject, text_content, from_email, to)
     msg.attach_alternative(html_content, "text/html")
 
-    template = get_template('pdf.html')
+    template = get_template('invoice/pdf.html')
     html = template.render({'invoice': invoice, 'team': team})
     pdf = pdfkit.from_string(html, False, options={})
 

@@ -1,10 +1,10 @@
 from rest_framework import serializers
 
-from .models import Invoice, Item
+from .models import Invoice, ExpenseItem
 
 class ItemSerializer(serializers.ModelSerializer):   
     class Meta:
-        model = Item
+        model = ExpenseItem
         read_only_fields = (
             "invoice",
         )
@@ -67,6 +67,6 @@ class InvoiceSerializer(serializers.ModelSerializer):
         invoice = Invoice.objects.create(**validated_data)
 
         for item in items_data:
-            Item.objects.create(invoice=invoice, **item)
+            ExpenseItem.objects.create(invoice=invoice, **item)
         
         return invoice
