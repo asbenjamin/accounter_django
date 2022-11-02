@@ -12,7 +12,7 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 from rest_framework.response import Response
 
 from .serializers import ReceiptSerializer, ItemSerializer
-from .models import Receipt, Item
+from .models import Receipt, SaleItem
 
 from team.models import Team
 
@@ -43,13 +43,13 @@ class ReceiptViewSet(viewsets.ModelViewSet):
 @authentication_classes([authentication.TokenAuthentication])
 @permission_classes([permissions.IsAuthenticated])
 def generate_pdf(request, receipt_id):
-    receipt = get_object_or_404(receipt, pk=receipt_id, created_by=request.user)
+    receipt = get_object_or_404(Receipt, pk=receipt_id, created_by=request.user)
     team = Team.objects.filter(created_by=request.user).first()
 
-    template_name = 'pdf.html'
+    template_name = 'receipt/pdf.html'
 
     if receipt.is_credit_for:
-        template_name = 'pdf_creditnote.html'
+        template_name = 'receipt/pdf_creditnote.html'
 
     template = get_template(template_name)
     html = template.render({'receipt': receipt, 'team': team})
@@ -76,7 +76,7 @@ def send_reminder(request, receipt_id):
     msg = EmailMultiAlternatives(subject, text_content, from_email, to)
     msg.attach_alternative(html_content, "text/html")
 
-    template = get_template('pdf.html')
+    template = get_template('receipt/pdf.html')
     html = template.render({'receipt': receipt, 'team': team})
     pdf = pdfkit.from_string(html, False, options={})
 

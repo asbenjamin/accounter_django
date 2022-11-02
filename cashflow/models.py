@@ -1,3 +1,13 @@
 from django.db import models
 
-# Create your models here.
+
+class Funding(models.Model):
+	pass
+
+
+class Equity(models.Model):
+	pass
+
+
+class OpeningBalance(models.Model):
+	pass
