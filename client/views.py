@@ -1,6 +1,7 @@
 from django.shortcuts import render
 
 from rest_framework import viewsets 
+from rest_framework.request import Request
 
 from .serializers import ClientSerializer
 from .models import Client
@@ -17,10 +18,13 @@ class ClientViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(created_by=self.request.user)
     
-    def perform_update(self, serializer):
-        obj = self.get_object()
+    def update(self, request: Request, *args, **kwargs):
+        # serializer = ClientSerializer
+        serializer.is_valid(raise_exception=True)
 
-        if self.request.user != obj.created_by:
-            raise PermissionDenied('Wrong object owner')
+        # obj = self.get_object()
+
+        # if self.request.user != obj.created_by:
+        #     raise PermissionDenied('Wrong object owner')
     
         serializer.save()
