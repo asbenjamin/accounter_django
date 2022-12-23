@@ -75,4 +75,13 @@ class NetCashBalance(APIView):
 
         cash_balance = ((total_sales.get('net_amount__sum')) or 0) - ((total_operational_costs.get('net_amount__sum') or 0) + total_taxes)
 
+        # ideas for chart rep - See accounter cash_balance viewset
+        # https://www.geeksforgeeks.org/data-visualization-using-chartjs-and-django/
+        # date = request.date
+        # sales = sales.filter(date)
+        # res = {
+        #     "date": date, 
+        #     "sales": sales
+        #     }
+
         return Response(cash_balance)
