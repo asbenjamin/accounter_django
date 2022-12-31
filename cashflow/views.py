@@ -140,3 +140,38 @@ class GraphicalProfitLossStement(APIView):
         # {'date': [1, 2, 3], 'total': [{'amount__sum': 6000}, {'amount__sum': None}, {'amount__sum': 40000}]}
 
         return Response(data)
+
+
+class CashFlowStatement(APIView):
+    def get_month_cash_flow(date):
+
+        # inflows (Add things like debt repayments, etc)
+        total_sales =  Receipt.objects.filter(created_at__month=date).aggregate(Sum('net_amount'))
+        total_inflows = total_sales
+
+        # outflows
+        total_operational_costs =  Invoice.objects.filter(created_at__month=date).aggregate(Sum('net_amount'))
+        gross_profit = (total_sales.get('net_amount__sum') or 0) - (total_operational_costs.get('net_amount__sum'))
+        if gross_profit < 0:
+            total_taxes = 0
+        else:
+            total_taxes = decimal.Decimal(0.3)*(gross_profit)
+        total_outflows = total_operational_costs + total_taxes
+
+        cash_balance = total_inflows - total_outflows
+        return cash_balance
+    
+    def balance_brought_forward(self, date):
+        return self.get_month_cash_flow(date-1)
+
+    def get(self, request, format=None):
+        request_date = self.request.query_params.get('date') # could be month like 3
+        starting_month = 1 # to be obtained through API when set
+        starting_balance = 0 # to be obtained through API when set
+
+        # we should enforce a starting month, I mean it has to always be there anyway
+        request_cash_flow_date = \
+            starting_balance + self.get_month_cash_flow(starting_month) \
+            + sum([(self.get_month_cash_flow(date) + self.balance_brought_forward(date)) for date in range((starting_month+1), request_date)])
+
+        return Response(request_cash_flow_date)
