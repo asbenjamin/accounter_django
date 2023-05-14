@@ -111,11 +111,21 @@ WSGI_APPLICATION = 'invoicely.wsgi.application'
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
 DATABASE_URL = os.getenv("DATABASE_URL")
+# DATABASES = {
+#     'default': dj_database_url.config(
+#         default=(DATABASE_URL),
+#         conn_max_age=600
+#     )}
 DATABASES = {
-    'default': dj_database_url.config(
-        default=(DATABASE_URL),
-        conn_max_age=600
-    )}
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.getenv('NAME'),
+        'USER': os.getenv('PGUSER'),
+        'PASSWORD': os.getenv('PGPASSWORD'),
+        'HOST': os.getenv('PGHOST'),
+        'PORT': os.getenv('PGPORT'),
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
