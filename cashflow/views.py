@@ -129,12 +129,31 @@ class GraphicalProfitLossStement(APIView):
 
             # print (type(date_min), date_min)
 
-        date = [month for month in range(8, 14)]
+        date = [month for month in range(0, 14)]
 
         total_sales = [Receipt.objects.filter(created_at__month=date).aggregate(Sum('net_amount')) for date in date]
+        total_expenses = [Invoice.objects.filter(created_at__month=date).aggregate(Sum('net_amount')) for date in date]
+        gross_profit = [
+                (Receipt.objects.filter(created_at__month=date)
+                    .aggregate(Sum('net_amount'))['net_amount__sum'] or 0) -
+                (Invoice.objects.filter(created_at__month=date)
+                    .aggregate(Sum('net_amount'))['net_amount__sum'] or 0)
+                for date in date
+            ]
+        # taxes = 100000 placeholder, next is to add VAT and income tax
+        net_profit = [
+                (Receipt.objects.filter(created_at__month=date)
+                    .aggregate(Sum('net_amount'))['net_amount__sum'] or 0) -
+                (Invoice.objects.filter(created_at__month=date)
+                    .aggregate(Sum('net_amount'))['net_amount__sum'] or 0)
+                for date in date
+            ]
+
         data = {
             "date" : date,
-            "total" : total_sales
+            "total_sales" : total_sales,
+            "total_expenses" : total_expenses,
+            "gross_profit" : gross_profit,
         }
         # print (json.dumps(data))
         # {'date': [1, 2, 3], 'total': [{'amount__sum': 6000}, {'amount__sum': None}, {'amount__sum': 40000}]}
