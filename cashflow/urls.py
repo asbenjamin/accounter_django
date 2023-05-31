@@ -15,6 +15,8 @@ urlpatterns = [
     re_path(r'^taxes/', views.SalesTaxesView.as_view(), name='taxes'),
     re_path(r'^gross-profit/', views.GrossProfitView.as_view(), name='gross-profit'),
     re_path(r'^net-cash/', views.NetCashBalance.as_view(), name='net-cash'),
+    re_path(r'^profit-loss-statement/', views.ProfitLossStatementView.as_view(), name='profit-loss-statement'),
+    re_path(r'^chart/', views.GraphicalProfitLossStement.as_view(), name='chart'),
     re_path(r'^vat/', views.VATView.as_view(), name='vat'),
     # re_path(r'^cumm-cash-balance/', views.CummCashBalance.as_view(), name='cumm_cash_balance')
 ]
